@@ -9,10 +9,10 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Instructions from './Instructions';
-import AudioForm from './AudioForm';
-import Review from './Review';
-import Finish from './Finish';
+import Instructions from '../Instructions/Instructions';
+import AudioForm from '../AudioForm/AudioForm';
+import Review from '../Review/Review';
+import Finish from '../Finish/Finish';
 
 const styles = theme => ({
   appBar: {
