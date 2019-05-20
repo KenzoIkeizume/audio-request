@@ -11,23 +11,24 @@ const audios = [
   { name: 'Audio 2', desc: 'Another thing', seconds: '12' },
   { name: 'Audio 3', desc: 'Something else', seconds: '2' },
   { name: 'Audio 4', desc: 'Best thing of all', seconds: '42' },
-  { name: 'Audio 5', desc: 'Best thing of all', seconds: '42' },
+  { name: 'Audio 5', desc: 'Best thing of all', seconds: '42' }
 ];
 
 const styles = theme => ({
   listItem: {
-    padding: `${theme.spacing.unit}px 0`,
+    padding: `${theme.spacing.unit}px 0`
   },
   total: {
-    fontWeight: '700',
+    fontWeight: '700'
   },
   title: {
-    marginTop: theme.spacing.unit * 2,
-  },
+    marginTop: theme.spacing.unit * 2
+  }
 });
 
 function Review(props) {
-  const { classes } = props;
+  const { classes, name, lastName, email } = props;
+
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
@@ -46,9 +47,9 @@ function Review(props) {
           <Typography variant="h6" gutterBottom className={classes.title}>
             Informações pessoais
           </Typography>
-          <Typography gutterBottom>Nome</Typography>
-          <Typography gutterBottom>Sobrenome</Typography>
-          <Typography gutterBottom>Email</Typography>
+          <Typography gutterBottom>Nome: {name}</Typography>
+          <Typography gutterBottom>Sobrenome: {lastName}</Typography>
+          <Typography gutterBottom>Email: {email}</Typography>
         </Grid>
       </Grid>
     </React.Fragment>

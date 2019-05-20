@@ -16,7 +16,7 @@ import Finish from '../Finish/Finish';
 
 const styles = theme => ({
   appBar: {
-    position: 'relative',
+    position: 'relative'
   },
   layout: {
     width: 'auto',
@@ -25,8 +25,8 @@ const styles = theme => ({
     [theme.breakpoints.up(600 + theme.spacing.unit * 2 * 2)]: {
       width: 600,
       marginLeft: 'auto',
-      marginRight: 'auto',
-    },
+      marginRight: 'auto'
+    }
   },
   paper: {
     marginTop: theme.spacing.unit * 3,
@@ -35,57 +35,85 @@ const styles = theme => ({
     [theme.breakpoints.up(600 + theme.spacing.unit * 3 * 2)]: {
       marginTop: theme.spacing.unit * 6,
       marginBottom: theme.spacing.unit * 6,
-      padding: theme.spacing.unit * 3,
-    },
+      padding: theme.spacing.unit * 3
+    }
   },
   stepper: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 5}px`,
+    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 5}px`
   },
   buttons: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   button: {
     marginTop: theme.spacing.unit * 3,
-    marginLeft: theme.spacing.unit,
-  },
+    marginLeft: theme.spacing.unit
+  }
 });
 
 const steps = ['Instruções', 'Cadastro do audio', 'Revisão'];
 
-const getStepContent = (step) => {
-  switch (step) {
-    case 0:
-      return <Instructions />;
-    case 1:
-      return <AudioForm />;
-    case 2:
-      return <Review />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
-
 class Checkout extends React.Component {
-  state = {
-    activeStep: 0,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      activeStep: 0,
+      name: '',
+      lastName: '',
+      email: ''
+    };
+
+    this.onDataChange = this.onDataChange.bind(this);
+
+    this.getStepContent = step => {
+      switch (step) {
+        case 0:
+          return <Instructions />;
+        case 1:
+          return (
+            <AudioForm
+              name={this.state.name}
+              lastName={this.state.lastName}
+              email={this.state.email}
+              onDataChange={this.onDataChange}
+            />
+          );
+        case 2:
+          return (
+            <Review
+              name={this.state.name}
+              lastName={this.state.lastName}
+              email={this.state.email}
+            />
+          );
+        default:
+          throw new Error('Unknown step');
+      }
+    };
+  }
+
+  onDataChange = event => {
+    this.setState({
+      [event.target.id]: event.target.value
+    });
   };
 
   handleNext = () => {
     this.setState(state => ({
-      activeStep: state.activeStep + 1,
+      activeStep: state.activeStep + 1
     }));
   };
 
   handleBack = () => {
     this.setState(state => ({
-      activeStep: state.activeStep - 1,
+      activeStep: state.activeStep - 1
     }));
   };
 
   handleReset = () => {
     this.setState({
-      activeStep: 0,
+      activeStep: 0
     });
   };
 
@@ -93,6 +121,7 @@ class Checkout extends React.Component {
     const { classes } = this.props;
     const { activeStep } = this.state;
 
+    console.log('this.state :', this.state);
     return (
       <React.Fragment>
         <CssBaseline />
@@ -116,12 +145,17 @@ class Checkout extends React.Component {
               ))}
             </Stepper>
             <React.Fragment>
-              {activeStep === steps.length ? <Finish /> : (
+              {activeStep === steps.length ? (
+                <Finish />
+              ) : (
                 <React.Fragment>
-                  {getStepContent(activeStep)}
+                  {this.getStepContent(activeStep)}
                   <div className={classes.buttons}>
                     {activeStep !== 0 && (
-                      <Button onClick={this.handleBack} className={classes.button}>
+                      <Button
+                        onClick={this.handleBack}
+                        className={classes.button}
+                      >
                         Voltar
                       </Button>
                     )}
@@ -131,7 +165,9 @@ class Checkout extends React.Component {
                       onClick={this.handleNext}
                       className={classes.button}
                     >
-                      {activeStep === steps.length - 1 ? 'Enviar audios' : 'Próximo'}
+                      {activeStep === steps.length - 1
+                        ? 'Enviar audios'
+                        : 'Próximo'}
                     </Button>
                   </div>
                 </React.Fragment>

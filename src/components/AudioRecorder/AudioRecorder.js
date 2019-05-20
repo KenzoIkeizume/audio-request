@@ -35,7 +35,7 @@ class AudioRecorder extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    
     return (
       <React.Fragment>
         <Grid item xs={9} md={10}>
