@@ -5,14 +5,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
-
-const audios = [
-  { name: 'Audio 1', desc: 'A nice thing', seconds: '23' },
-  { name: 'Audio 2', desc: 'Another thing', seconds: '12' },
-  { name: 'Audio 3', desc: 'Something else', seconds: '2' },
-  { name: 'Audio 4', desc: 'Best thing of all', seconds: '42' },
-  { name: 'Audio 5', desc: 'Best thing of all', seconds: '42' }
-];
+import ReactAudioPlayer from 'react-audio-player';
+import { PHRASES } from '../AudioForm/phrases';
 
 const styles = theme => ({
   listItem: {
@@ -26,8 +20,8 @@ const styles = theme => ({
   }
 });
 
-function Review(props) {
-  const { classes, name, lastName, email } = props;
+const Review = props => {
+  const { classes, name, lastName, email, audios } = props;
 
   return (
     <React.Fragment>
@@ -35,12 +29,18 @@ function Review(props) {
         Audios
       </Typography>
       <List disablePadding>
-        {audios.map(audio => (
-          <ListItem className={classes.listItem} key={audio.name}>
-            <ListItemText primary={audio.name} secondary={audio.desc} />
-            <Typography variant="body2">{audio.seconds}s</Typography>
-          </ListItem>
-        ))}
+        {Object.entries(audios).map(audio => {
+          const [key, value] = audio;
+
+          return (
+            <div key={key}>
+              <ListItem className={classes.listItem}>
+                <ListItemText primary={key} secondary={PHRASES[key]} />
+              </ListItem>
+              <ReactAudioPlayer src={value.blobURL} controls />
+            </div>
+          );
+        })}
       </List>
       <Grid container spacing={16}>
         <Grid item xs={12}>
@@ -54,6 +54,6 @@ function Review(props) {
       </Grid>
     </React.Fragment>
   );
-}
+};
 
 export default withStyles(styles)(Review);

@@ -13,6 +13,7 @@ import Instructions from '../Instructions/Instructions';
 import AudioForm from '../AudioForm/AudioForm';
 import Review from '../Review/Review';
 import Finish from '../Finish/Finish';
+import { PHRASES } from '../AudioForm/phrases';
 
 const styles = theme => ({
   appBar: {
@@ -59,12 +60,24 @@ class Checkout extends React.Component {
 
     this.state = {
       activeStep: 0,
+      phraseStep: 0,
       name: '',
       lastName: '',
-      email: ''
+      email: '',
+      audios: {
+        audio_1: {},
+        audio_2: {},
+        audio_3: {},
+        audio_4: {},
+        audio_5: {}
+      }
     };
 
     this.onDataChange = this.onDataChange.bind(this);
+    this.onData = this.onData.bind(this);
+    this.onStop = this.onStop.bind(this);
+    this.nextClick = this.nextClick.bind(this);
+    this.prevClick = this.prevClick.bind(this);
 
     this.getStepContent = step => {
       switch (step) {
@@ -77,6 +90,11 @@ class Checkout extends React.Component {
               lastName={this.state.lastName}
               email={this.state.email}
               onDataChange={this.onDataChange}
+              onData={this.onData}
+              onStop={this.onStop}
+              phraseStep={this.state.phraseStep}
+              nextClick={this.nextClick}
+              prevClick={this.prevClick}
             />
           );
         case 2:
@@ -85,6 +103,7 @@ class Checkout extends React.Component {
               name={this.state.name}
               lastName={this.state.lastName}
               email={this.state.email}
+              audios={this.state.audios}
             />
           );
         default:
@@ -92,6 +111,47 @@ class Checkout extends React.Component {
       }
     };
   }
+
+  nextClick = () => {
+    let nextState = this.state.phraseStep;
+
+    if (nextState === PHRASES.length - 1) {
+      nextState = 0;
+    } else {
+      nextState = nextState + 1;
+    }
+
+    this.setState({
+      phraseStep: nextState
+    });
+  };
+
+  prevClick = () => {
+    let prevState = this.state.phraseStep;
+
+    if (prevState === 0) {
+      prevState = PHRASES.length - 1;
+    } else {
+      prevState = prevState - 1;
+    }
+
+    this.setState({
+      phraseStep: prevState
+    });
+  };
+
+  onData = recordedBlob => {
+    console.log('recordedBlob: ', recordedBlob);
+  };
+
+  onStop = (recordedBlob) => {
+    this.setState({
+      audios: {
+        ...this.state.audios,
+        [PHRASES[this.state.phraseStep].key]: recordedBlob
+      }
+    });
+  };
 
   onDataChange = event => {
     this.setState({
@@ -121,7 +181,6 @@ class Checkout extends React.Component {
     const { classes } = this.props;
     const { activeStep } = this.state;
 
-    console.log('this.state :', this.state);
     return (
       <React.Fragment>
         <CssBaseline />

@@ -3,6 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
+import { PHRASES } from './phrases';
 
 const AudioForm = props => {
   return (
@@ -41,7 +42,13 @@ const AudioForm = props => {
             onChange={props.onDataChange}
           />
         </Grid>
-        <AudioRecorder />
+        <AudioRecorder
+          onData={props.onData}
+          onStop={props.onStop}
+          phrase={PHRASES[props.phraseStep].phase}
+          nextClick={props.nextClick}
+          prevClick={props.prevClick}
+        />
       </Grid>
     </React.Fragment>
   );

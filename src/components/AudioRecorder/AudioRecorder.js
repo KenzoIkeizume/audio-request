@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import { KeyboardVoice } from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
-import ReactAudioPlayer from 'react-audio-player';
+import Card from '@material-ui/core/Card';
 
 import './AudioRecorder.css';
 
@@ -13,13 +13,12 @@ const styles = () => ({});
 class AudioRecorder extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      record: false,
-      blobURL: ''
+      record: false
     };
 
     this.recordingAudio = this.recordingAudio.bind(this);
-    this.onStop = this.onStop.bind(this);
   }
 
   recordingAudio = () => {
@@ -28,44 +27,47 @@ class AudioRecorder extends React.Component {
     });
   };
 
-  onData(recordedBlob) {
-    console.log('chunk of real-time data is: ', recordedBlob);
-  }
-
-  onStop(recordedBlob) {
-    console.log('recordedBlob is: ', recordedBlob);
-    this.setState({
-      blobURL: recordedBlob.blobURL
-    });
-  }
-
   render() {
-    const { classes } = this.props;
-    console.log('this.test  :', this.state.blobURL);
+    const { classes, phrase, nextClick, prevClick } = this.props;
+
     return (
-      <React.Fragment>
-        <Grid item xs={9} md={10}>
-          <ReactMic
-            record={this.state.record}
-            className="sound-wave"
-            onStop={this.onStop}
-            onData={this.onData}
-            strokeColor="#3f51b5"
-            backgroundColor="#FFFFFF"
-          />
+      <Card className={classes.card}>
+        <Grid container spacing={16}>
+          <Grid item xs={12}>
+            <span className="phrases-value">Frase: {phrase}</span>
+          </Grid>
+          <Grid item xs={2} md={1}>
+            <button className="button-change" onClick={prevClick}>
+              {'<'}
+            </button>
+          </Grid>
+          <Grid item xs={6} md={8}>
+            <ReactMic
+              record={this.state.record}
+              className="sound-wave"
+              onStop={this.props.onStop}
+              onData={this.props.onData}
+              strokeColor="#3f51b5"
+              backgroundColor="#FFFFFF"
+            />
+          </Grid>
+          <Grid item xs={2} className="div-voice ">
+            <Fab
+              color={this.state.record ? 'secondary' : 'primary'}
+              aria-label="Add"
+              className={classes.fab}
+              onClick={this.recordingAudio}
+            >
+              <KeyboardVoice />
+            </Fab>
+          </Grid>
+          <Grid item xs={2} md={1}>
+            <button className="button-change" onClick={nextClick}>
+              {'>'}
+            </button>
+          </Grid>
         </Grid>
-        <Grid item xs={3} md={2}>
-          <Fab
-            color={this.state.record ? 'secondary' : 'primary'}
-            aria-label="Add"
-            className={classes.fab}
-            onClick={this.recordingAudio}
-          >
-            <KeyboardVoice />
-          </Fab>
-        </Grid>
-        <ReactAudioPlayer src={this.state.blobURL} autoPlay controls />
-      </React.Fragment>
+      </Card>
     );
   }
 }

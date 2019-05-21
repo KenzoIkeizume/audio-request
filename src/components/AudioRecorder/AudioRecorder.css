@@ -1,4 +1,21 @@
 .sound-wave {
   width: 100%;
   height: 100%;
-};
+}
+
+.phrases-value {
+  padding: 10px;
+}
+
+.button-change {
+  height: 100%;
+  width: 100%;
+  border: none;
+  border-radius: 15%;
+  opacity: 0.5;
+}
+
+.div-voice {
+  display: flex;
+  justify-content: space-around;
+}
