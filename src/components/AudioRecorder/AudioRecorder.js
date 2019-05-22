@@ -5,6 +5,7 @@ import Fab from '@material-ui/core/Fab';
 import { KeyboardVoice } from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
 
 import './AudioRecorder.css';
 
@@ -34,14 +35,16 @@ class AudioRecorder extends React.Component {
       <Card className={classes.card}>
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            <span className="phrases-value">Frase: {phrase}</span>
+            <Typography variant="h6" gutterBottom className="phrases-value">
+              Frase: {phrase}
+            </Typography>
           </Grid>
-          <Grid item xs={2} md={1}>
+          <Grid item xs={2}>
             <button className="button-change" onClick={prevClick}>
               {'<'}
             </button>
           </Grid>
-          <Grid item xs={6} md={8}>
+          <Grid item xs={6}>
             <ReactMic
               record={this.state.record}
               className="sound-wave"
@@ -51,7 +54,7 @@ class AudioRecorder extends React.Component {
               backgroundColor="#FFFFFF"
             />
           </Grid>
-          <Grid item xs={2} className="div-voice ">
+          <Grid item xs={2} className="fab-audio">
             <Fab
               color={this.state.record ? 'secondary' : 'primary'}
               aria-label="Add"
@@ -61,7 +64,7 @@ class AudioRecorder extends React.Component {
               <KeyboardVoice />
             </Fab>
           </Grid>
-          <Grid item xs={2} md={1}>
+          <Grid item xs={2}>
             <button className="button-change" onClick={nextClick}>
               {'>'}
             </button>

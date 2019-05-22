@@ -9,7 +9,7 @@ const AudioForm = props => {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Payment method
+        Cadastro
       </Typography>
       <Grid container spacing={24}>
         <Grid item xs={12} md={6}>

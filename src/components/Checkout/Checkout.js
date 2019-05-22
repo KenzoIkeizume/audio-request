@@ -78,6 +78,7 @@ class Checkout extends React.Component {
     this.onStop = this.onStop.bind(this);
     this.nextClick = this.nextClick.bind(this);
     this.prevClick = this.prevClick.bind(this);
+    this.handleClickVariant = this.handleClickVariant.bind(this);
 
     this.getStepContent = step => {
       switch (step) {
@@ -110,6 +111,37 @@ class Checkout extends React.Component {
           throw new Error('Unknown step');
       }
     };
+  }
+
+  handleClickVariant = (message, variant) => () => {
+    // variant could be success, error, warning or info
+    this.props.enqueueSnackbar(message, { variant });
+  };
+
+  isEmail() {
+    // eslint-disable-next-line
+    const test = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+    return !test.test(this.state.email);
+  }
+
+  validateClick = (nextState) => {
+    let isValid = true;
+
+    if (nextState > 0) {
+      if (this.state.name.length < 3) {
+        this.handleClickVariant('Nome inválido!', 'warning')();
+        isValid = false;
+      } else if (this.state.lastName.length < 3) {
+        this.handleClickVariant('Sobrenome inválido!', 'warning')();
+        isValid = false;
+      } else if (this.isEmail()) {
+        this.handleClickVariant('Email inválido!', 'warning')();
+        isValid = false;
+      }
+    }
+
+    return isValid;
   }
 
   nextClick = () => {
@@ -160,9 +192,13 @@ class Checkout extends React.Component {
   };
 
   handleNext = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep + 1
-    }));
+    const isValid = this.validateClick(this.state.activeStep);
+
+    if (isValid) {
+      this.setState(state => ({
+        activeStep: state.activeStep + 1
+      }));
+    }
   };
 
   handleBack = () => {
@@ -207,30 +243,30 @@ class Checkout extends React.Component {
               {activeStep === steps.length ? (
                 <Finish />
               ) : (
-                <React.Fragment>
-                  {this.getStepContent(activeStep)}
-                  <div className={classes.buttons}>
-                    {activeStep !== 0 && (
+                  <React.Fragment>
+                    {this.getStepContent(activeStep)}
+                    <div className={classes.buttons}>
+                      {activeStep !== 0 && (
+                        <Button
+                          onClick={this.handleBack}
+                          className={classes.button}
+                        >
+                          Voltar
+                      </Button>
+                      )}
                       <Button
-                        onClick={this.handleBack}
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleNext}
                         className={classes.button}
                       >
-                        Voltar
+                        {activeStep === steps.length - 1
+                          ? 'Enviar audios'
+                          : 'Próximo'}
                       </Button>
-                    )}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.handleNext}
-                      className={classes.button}
-                    >
-                      {activeStep === steps.length - 1
-                        ? 'Enviar audios'
-                        : 'Próximo'}
-                    </Button>
-                  </div>
-                </React.Fragment>
-              )}
+                    </div>
+                  </React.Fragment>
+                )}
             </React.Fragment>
           </Paper>
         </main>
