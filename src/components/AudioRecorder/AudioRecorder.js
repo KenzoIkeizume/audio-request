@@ -25,18 +25,11 @@ class AudioRecorder extends React.Component {
     };
 
     this.recordingAudio = this.recordingAudio.bind(this);
-    this.leaveAudio = this.leaveAudio.bind(this);
   }
 
   recordingAudio = () => {
     this.setState({
-      record: true
-    });
-  };
-
-  leaveAudio = () => {
-    this.setState({
-      record: false
+      record: !this.state.record
     });
   };
 
@@ -65,8 +58,8 @@ class AudioRecorder extends React.Component {
             <ReactMic
               record={this.state.record}
               className="sound-wave"
-              onStop={this.props.onStop}
               onData={this.props.onData}
+              onStop={this.props.onStop}
               strokeColor="#3f51b5"
               backgroundColor="#FFFFFF"
             />
@@ -76,8 +69,7 @@ class AudioRecorder extends React.Component {
               color={this.state.record ? 'secondary' : 'primary'}
               aria-label="Add"
               className={classes.fab}
-              onPointerDown={this.recordingAudio}
-              onPointerUp={this.leaveAudio}
+              onClick={this.recordingAudio}
             >
               <KeyboardVoice />
             </Fab>

@@ -44,6 +44,7 @@ const AudioForm = props => {
         </Grid>
         <AudioRecorder
           onStop={props.onStop}
+          onData={props.onData}
           phrase={PHRASES[props.phraseStep].phase}
           nextClick={props.nextClick}
           prevClick={props.prevClick}

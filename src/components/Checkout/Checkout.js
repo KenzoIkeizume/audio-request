@@ -83,6 +83,7 @@ class Checkout extends React.Component {
 
     this.onDataChange = this.onDataChange.bind(this);
     this.onStop = this.onStop.bind(this);
+    this.onData = this.onData.bind(this);
     this.nextClick = this.nextClick.bind(this);
     this.prevClick = this.prevClick.bind(this);
     this.handleClickVariant = this.handleClickVariant.bind(this);
@@ -100,6 +101,7 @@ class Checkout extends React.Component {
               email={this.state.email}
               onDataChange={this.onDataChange}
               onStop={this.onStop}
+              onData={this.onData}
               phraseStep={this.state.phraseStep}
               nextClick={this.nextClick}
               prevClick={this.prevClick}
@@ -158,7 +160,6 @@ class Checkout extends React.Component {
 
     if (nextState > 0) {
       if (this.state.name.length < 3) {
-        console.log('entro');
         this.handleClickVariant('Nome inválido!', 'warning');
         isValid = false;
       } else if (this.state.lastName.length < 3) {
@@ -201,8 +202,12 @@ class Checkout extends React.Component {
     });
   };
 
+  onData = recordedBlob => {
+    console.log('onData(recordedBlob) :', recordedBlob);
+  }
+
   onStop = recordedBlob => {
-    console.log('recordedBlob :', recordedBlob);
+    console.log('onStop(recordedBlob) :', recordedBlob);
     if (recordedBlob.stopTime - recordedBlob.startTime > 1000) {
       this.setState({
         audios: {
