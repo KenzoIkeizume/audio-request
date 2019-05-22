@@ -90,6 +90,10 @@ class Checkout extends React.Component {
     this.handleClose = this.handleClose.bind(this);
 
     this.getStepContent = step => {
+      console.log(
+        'Object.values(this.state.audios)[this.state.phraseStep]  :',
+        Object.values(this.state.audios)[this.state.phraseStep]
+      );
       switch (step) {
         case 0:
           return <Instructions />;
@@ -105,6 +109,9 @@ class Checkout extends React.Component {
               phraseStep={this.state.phraseStep}
               nextClick={this.nextClick}
               prevClick={this.prevClick}
+              checked={
+                !!Object.values(this.state.audios)[this.state.phraseStep].blob
+              }
             />
           );
         case 2:
@@ -205,6 +212,7 @@ class Checkout extends React.Component {
   };
 
   onStop = recordedBlob => {
+    console.log('recordedBlob :', recordedBlob);
     this.setState({
       audios: {
         ...this.state.audios,

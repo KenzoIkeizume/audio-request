@@ -48,6 +48,7 @@ const AudioForm = props => {
           phrase={PHRASES[props.phraseStep].phase}
           nextClick={props.nextClick}
           prevClick={props.prevClick}
+          checked={props.checked}
         />
       </Grid>
     </React.Fragment>

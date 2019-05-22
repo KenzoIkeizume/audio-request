@@ -25,16 +25,23 @@ class AudioRecorder extends React.Component {
     };
 
     this.recordingAudio = this.recordingAudio.bind(this);
+    this.leaveAudio = this.leaveAudio.bind(this);
   }
 
   recordingAudio = () => {
     this.setState({
-      record: !this.state.record
+      record: true
+    });
+  };
+
+  leaveAudio = () => {
+    this.setState({
+      record: false
     });
   };
 
   render() {
-    const { classes, phrase, nextClick, prevClick } = this.props;
+    const { classes, phrase, nextClick, prevClick, checked } = this.props;
 
     return (
       <Card className={classes.card}>
@@ -42,11 +49,15 @@ class AudioRecorder extends React.Component {
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom className="phrases-value">
               Frase: {phrase}
-              <Checked checked={false} />
+              <Checked checked={checked} />
             </Typography>
           </Grid>
           <Grid item xs={2}>
-            <button className="button-change" onClick={prevClick}>
+            <button
+              className="button-change"
+              onClick={prevClick}
+              disabled={this.state.record}
+            >
               <KeyboardArrowLeft fontSize="large" />
             </button>
           </Grid>
@@ -65,13 +76,18 @@ class AudioRecorder extends React.Component {
               color={this.state.record ? 'secondary' : 'primary'}
               aria-label="Add"
               className={classes.fab}
-              onClick={this.recordingAudio}
+              onPointerDown={this.recordingAudio}
+              onPointerUp={this.leaveAudio}
             >
               <KeyboardVoice />
             </Fab>
           </Grid>
           <Grid item xs={2}>
-            <button className="button-change" onClick={nextClick}>
+            <button
+              className="button-change"
+              onClick={nextClick}
+              disabled={this.state.record}
+            >
               <KeyboardArrowRight fontSize="large" />
             </button>
           </Grid>
