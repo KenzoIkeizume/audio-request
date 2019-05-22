@@ -2,12 +2,17 @@ import React from 'react';
 import { ReactMic } from 'react-mic';
 import { withStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
-import { KeyboardVoice } from '@material-ui/icons';
+import {
+  KeyboardVoice,
+  KeyboardArrowLeft,
+  KeyboardArrowRight
+} from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 
 import './AudioRecorder.css';
+import Checked from './components/Checked/Checked';
 
 const styles = () => ({});
 
@@ -37,11 +42,12 @@ class AudioRecorder extends React.Component {
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom className="phrases-value">
               Frase: {phrase}
+              <Checked checked={false} />
             </Typography>
           </Grid>
           <Grid item xs={2}>
             <button className="button-change" onClick={prevClick}>
-              {'<'}
+              <KeyboardArrowLeft fontSize="large" />
             </button>
           </Grid>
           <Grid item xs={6}>
@@ -66,7 +72,7 @@ class AudioRecorder extends React.Component {
           </Grid>
           <Grid item xs={2}>
             <button className="button-change" onClick={nextClick}>
-              {'>'}
+              <KeyboardArrowRight fontSize="large" />
             </button>
           </Grid>
         </Grid>

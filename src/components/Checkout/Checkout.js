@@ -13,6 +13,7 @@ import Instructions from '../Instructions/Instructions';
 import AudioForm from '../AudioForm/AudioForm';
 import Review from '../Review/Review';
 import Finish from '../Finish/Finish';
+import Snackbar from '@material-ui/core/Snackbar';
 import { PHRASES } from '../AudioForm/phrases';
 
 const styles = theme => ({
@@ -70,6 +71,13 @@ class Checkout extends React.Component {
         audio_3: {},
         audio_4: {},
         audio_5: {}
+      },
+      snackBar: {
+        open: false,
+        vertical: 'top',
+        horizontal: 'right',
+        message: '',
+        variant: ''
       }
     };
 
@@ -79,6 +87,7 @@ class Checkout extends React.Component {
     this.nextClick = this.nextClick.bind(this);
     this.prevClick = this.prevClick.bind(this);
     this.handleClickVariant = this.handleClickVariant.bind(this);
+    this.handleClose = this.handleClose.bind(this);
 
     this.getStepContent = step => {
       switch (step) {
@@ -113,36 +122,55 @@ class Checkout extends React.Component {
     };
   }
 
-  handleClickVariant = (message, variant) => () => {
-    // variant could be success, error, warning or info
-    this.props.enqueueSnackbar(message, { variant });
+  handleClickVariant = (message, variant) => {
+    this.setState({
+      snackBar: {
+        ...this.state.snackBar,
+        message,
+        variant,
+        open: true
+      }
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      snackBar: {
+        ...this.state.snackBar,
+        message: '',
+        variant: '',
+        open: false
+      }
+    });
   };
 
   isEmail() {
-    // eslint-disable-next-line
-    const test = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    const test = new RegExp(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
 
     return !test.test(this.state.email);
   }
 
-  validateClick = (nextState) => {
+  validateClick = nextState => {
     let isValid = true;
 
     if (nextState > 0) {
       if (this.state.name.length < 3) {
-        this.handleClickVariant('Nome inválido!', 'warning')();
+        console.log('entro');
+        this.handleClickVariant('Nome inválido!', 'warning');
         isValid = false;
       } else if (this.state.lastName.length < 3) {
-        this.handleClickVariant('Sobrenome inválido!', 'warning')();
+        this.handleClickVariant('Sobrenome inválido!', 'warning');
         isValid = false;
       } else if (this.isEmail()) {
-        this.handleClickVariant('Email inválido!', 'warning')();
+        this.handleClickVariant('Email inválido!', 'warning');
         isValid = false;
       }
     }
 
     return isValid;
-  }
+  };
 
   nextClick = () => {
     let nextState = this.state.phraseStep;
@@ -176,7 +204,7 @@ class Checkout extends React.Component {
     console.log('recordedBlob: ', recordedBlob);
   };
 
-  onStop = (recordedBlob) => {
+  onStop = recordedBlob => {
     this.setState({
       audios: {
         ...this.state.audios,
@@ -243,33 +271,46 @@ class Checkout extends React.Component {
               {activeStep === steps.length ? (
                 <Finish />
               ) : (
-                  <React.Fragment>
-                    {this.getStepContent(activeStep)}
-                    <div className={classes.buttons}>
-                      {activeStep !== 0 && (
-                        <Button
-                          onClick={this.handleBack}
-                          className={classes.button}
-                        >
-                          Voltar
-                      </Button>
-                      )}
+                <React.Fragment>
+                  {this.getStepContent(activeStep)}
+                  <div className={classes.buttons}>
+                    {activeStep !== 0 && (
                       <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleNext}
+                        onClick={this.handleBack}
                         className={classes.button}
                       >
-                        {activeStep === steps.length - 1
-                          ? 'Enviar audios'
-                          : 'Próximo'}
+                        Voltar
                       </Button>
-                    </div>
-                  </React.Fragment>
-                )}
+                    )}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={this.handleNext}
+                      className={classes.button}
+                    >
+                      {activeStep === steps.length - 1
+                        ? 'Enviar audios'
+                        : 'Próximo'}
+                    </Button>
+                  </div>
+                </React.Fragment>
+              )}
             </React.Fragment>
           </Paper>
         </main>
+        <Snackbar
+          anchorOrigin={{
+            vertical: this.state.snackBar.vertical,
+            horizontal: this.state.snackBar.horizontal
+          }}
+          open={this.state.snackBar.open}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id'
+          }}
+          message={<span id="message-id">{this.state.snackBar.message}</span>}
+          autoHideDuration={2500000}
+        />
       </React.Fragment>
     );
   }
