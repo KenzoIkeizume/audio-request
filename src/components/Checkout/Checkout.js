@@ -82,7 +82,6 @@ class Checkout extends React.Component {
     };
 
     this.onDataChange = this.onDataChange.bind(this);
-    this.onData = this.onData.bind(this);
     this.onStop = this.onStop.bind(this);
     this.nextClick = this.nextClick.bind(this);
     this.prevClick = this.prevClick.bind(this);
@@ -90,10 +89,6 @@ class Checkout extends React.Component {
     this.handleClose = this.handleClose.bind(this);
 
     this.getStepContent = step => {
-      console.log(
-        'Object.values(this.state.audios)[this.state.phraseStep]  :',
-        Object.values(this.state.audios)[this.state.phraseStep]
-      );
       switch (step) {
         case 0:
           return <Instructions />;
@@ -104,7 +99,6 @@ class Checkout extends React.Component {
               lastName={this.state.lastName}
               email={this.state.email}
               onDataChange={this.onDataChange}
-              onData={this.onData}
               onStop={this.onStop}
               phraseStep={this.state.phraseStep}
               nextClick={this.nextClick}
@@ -207,18 +201,16 @@ class Checkout extends React.Component {
     });
   };
 
-  onData = recordedBlob => {
-    console.log('recordedBlob: ', recordedBlob);
-  };
-
   onStop = recordedBlob => {
     console.log('recordedBlob :', recordedBlob);
-    this.setState({
-      audios: {
-        ...this.state.audios,
-        [PHRASES[this.state.phraseStep].key]: recordedBlob
-      }
-    });
+    if (recordedBlob.stopTime - recordedBlob.startTime > 1000) {
+      this.setState({
+        audios: {
+          ...this.state.audios,
+          [PHRASES[this.state.phraseStep].key]: recordedBlob
+        }
+      });
+    }
   };
 
   onDataChange = event => {
