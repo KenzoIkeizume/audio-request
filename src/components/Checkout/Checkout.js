@@ -15,6 +15,7 @@ import Review from '../Review/Review';
 import Finish from '../Finish/Finish';
 import Snackbar from '@material-ui/core/Snackbar';
 import { PHRASES } from '../AudioForm/phrases';
+import { s3 } from '../../awsConfiguration';
 
 const styles = theme => ({
   appBar: {
@@ -224,10 +225,34 @@ class Checkout extends React.Component {
     });
   };
 
+  registerAudio = () => {
+    const { audios } = this.state;
+    
+    const blob = new File([audios['audio_1']], "test.mp3");
+    console.log('blob: ', blob);
+
+    s3.upload({
+      Key: 'test1',
+      Body: blob,
+      ACL: 'public-read'
+    }, (err, data) => {
+      if (err) {
+        console.log('There was an error uploading your audio: ', err.message);
+      }
+      console.log('Successfully uploaded audio.', data);
+    });
+  }
+
   handleNext = () => {
     const isValid = this.validateClick(this.state.activeStep);
 
     if (isValid) {
+
+      if (this.state.activeStep === 2) {
+        console.log('entro')
+        this.registerAudio();
+      }
+
       this.setState(state => ({
         activeStep: state.activeStep + 1
       }));
@@ -276,30 +301,30 @@ class Checkout extends React.Component {
               {activeStep === steps.length ? (
                 <Finish />
               ) : (
-                <React.Fragment>
-                  {this.getStepContent(activeStep)}
-                  <div className={classes.buttons}>
-                    {activeStep !== 0 && (
+                  <React.Fragment>
+                    {this.getStepContent(activeStep)}
+                    <div className={classes.buttons}>
+                      {activeStep !== 0 && (
+                        <Button
+                          onClick={this.handleBack}
+                          className={classes.button}
+                        >
+                          Voltar
+                      </Button>
+                      )}
                       <Button
-                        onClick={this.handleBack}
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleNext}
                         className={classes.button}
                       >
-                        Voltar
+                        {activeStep === steps.length - 1
+                          ? 'Enviar audios'
+                          : 'Próximo'}
                       </Button>
-                    )}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.handleNext}
-                      className={classes.button}
-                    >
-                      {activeStep === steps.length - 1
-                        ? 'Enviar audios'
-                        : 'Próximo'}
-                    </Button>
-                  </div>
-                </React.Fragment>
-              )}
+                    </div>
+                  </React.Fragment>
+                )}
             </React.Fragment>
           </Paper>
         </main>
